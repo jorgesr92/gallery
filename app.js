@@ -79,6 +79,12 @@ const orderPhotos = (photos) => {
   })
 }
 
+const findPhoto = (photos, element) => {
+  let arrPhotos = [];
+  
+  photos.map(photo => {if (photo.name.includes(element))  arrPhotos.push(photo)});
+  orderPhotos(arrPhotos);
+}
 
 const getPhotos = URL => {
   fetch(URL).then(response => onSuccesResponse(response)).catch(error => onErrorResponse (error))
