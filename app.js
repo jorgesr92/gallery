@@ -1,6 +1,8 @@
 const URL = "https://s3.amazonaws.com/codecademy-content/courses/ltp4/photos-api/photos.json";
 //const URL = "https://fakestoreapi.com/products";
 
+let allPhotos = [];
+const app = document.querySelector("#app");
 
 const createCard = (divColumn, photo) => {
 
@@ -82,7 +84,10 @@ const orderPhotos = (photos) => {
 const findPhoto = (photos, element) => {
   let arrPhotos = [];
   
-  photos.map(photo => {if (photo.name.includes(element))  arrPhotos.push(photo)});
+  console.log(element);
+  photos.map(photo => {
+    if (photo.title.toLowerCase() === element || photo.title.split("").includes(element))  arrPhotos.push(photo);
+  });
   orderPhotos(arrPhotos);
 }
 
@@ -91,13 +96,18 @@ const getPhotos = URL => {
 }
 
 const onSuccesResponse = response => response.json().then(photos => {
+  allPhotos = photos;
   orderPhotos(photos);
 });
 const onErrorResponse = error => console.error(`Aqui esta el error ${error}`);
 
 getPhotos(URL);
 
-const app = document.querySelector("#app");
+const search = document.getElementById("formSearch");
+search.addEventListener("change", ()=>{
+  console.log(search.value);
+  findPhoto(allPhotos, search.value);
+})
 
 
 
