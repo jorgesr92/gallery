@@ -1,11 +1,22 @@
 const URL = "https://s3.amazonaws.com/codecademy-content/courses/ltp4/photos-api/photos.json";
 //const URL = "https://fakestoreapi.com/products";
 
-let allPhotos = [];
 const app = document.querySelector("#app");
+const search = document.getElementById("formSearch");
+let allPhotos = [];
+const numColumnPhotos = 4;
+
+
+const noResults = (element) => {
+  let divNoResults = document.createElement("div");
+  divNoResults.id = "alertSearch";
+  divNoResults.classList = "alert alert-danger";
+  divNoResults.innerText = `No results with ${element}!`;
+  divNoResults.style.marginTop = '2rem';
+  app.appendChild(divNoResults);
+}
 
 const createCard = (divColumn, photo) => {
-
   let fecha = new Date(photo.pubdate);
   let dia = fecha.getUTCDate();
   let mes = fecha.getUTCMonth();
@@ -46,7 +57,6 @@ const createCard = (divColumn, photo) => {
   divBodyCard.appendChild(pCard);
   divBodyCard.appendChild(dateCard);
   dateCard.appendChild(smallDate);
-
 }
 
 
@@ -70,7 +80,7 @@ const orderPhotos = (photos) => {
   let divRow;
   let divColumn;
   photos.forEach(photo => {
-    if (photos.indexOf(photo)%4 === 0) {
+    if (photos.indexOf(photo)%numColumnPhotos === 0) {
       divRow = createRow();
       divColumn = createColumn(divRow);
       createCard(divColumn, photo);
@@ -81,14 +91,21 @@ const orderPhotos = (photos) => {
   })
 }
 
+const removeDivPhotos = () => {
+  let alertDiv = document.getElementById("alertSearch");
+  if (alertDiv) alertDiv.remove();
+  while (document.querySelectorAll(".row").length > 0){
+    app.removeChild(document.querySelector(".row"));
+  };
+}
+
 const findPhoto = (photos, element) => {
   let arrPhotos = [];
-  
-  console.log(element);
+  removeDivPhotos();
   photos.map(photo => {
-    if (photo.title.toLowerCase() === element || photo.title.split("").includes(element))  arrPhotos.push(photo);
+    if (photo.title.toLowerCase() === element || photo.title.toLowerCase().includes(element))  arrPhotos.push(photo);
   });
-  orderPhotos(arrPhotos);
+  arrPhotos.length > 0 ? orderPhotos(arrPhotos) : noResults(element);
 }
 
 const getPhotos = URL => {
@@ -103,9 +120,7 @@ const onErrorResponse = error => console.error(`Aqui esta el error ${error}`);
 
 getPhotos(URL);
 
-const search = document.getElementById("formSearch");
-search.addEventListener("change", ()=>{
-  console.log(search.value);
+search.addEventListener("change", (_event)=>{
   findPhoto(allPhotos, search.value);
 })
 
