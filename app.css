@@ -11,6 +11,11 @@
     text-align: center;
     padding: 32px;
   }
+
+  #app, #header {
+    margin-left: 5rem;
+    margin-right: 5rem;
+  }
   
   .row {
     display: -ms-flexbox; /* IE10 */
