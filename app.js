@@ -98,7 +98,6 @@ const createCard = (divColumn, photo) => {
   divContainer.appendChild(aLike);
   divContainer.appendChild(pLikes);
   aLike.appendChild(imgIcon);
-
 }
 
 
