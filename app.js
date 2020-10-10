@@ -16,6 +16,20 @@ const noResults = (element) => {
   app.appendChild(divNoResults);
 }
 
+const changeColorIcon = (img, color) => {
+  color ? img.src = "img/me-gustaC.png" : img.src = "img/me-gusta.png";
+}
+
+const sumLikes = (div, name) => {
+  let likes = parseInt(div.textContent);
+  likes++;
+  div.innerText = likes;
+  allPhotos.map(photo => {
+    if (photo.title === name) photo.upvotes = likes;
+  });
+}
+
+
 const createCard = (divColumn, photo) => {
   let fecha = new Date(photo.pubdate);
   let dia = fecha.getUTCDate();
@@ -49,6 +63,29 @@ const createCard = (divColumn, photo) => {
   imgPhoto.style.marginTop = "0px";
   imgPhoto.src = photo.url;
 
+  let divContainer = document.createElement("div");
+  divContainer.classList = "container";
+  divContainer.style.display = "flex";
+  divContainer.style.textAlign = "center";
+
+  let aLike = document.createElement("a");
+  aLike.style.flex = "auto";
+  aLike.onclick = () => sumLikes(pLikes, photo.title);
+
+  let imgIcon = document.createElement("img");
+  imgIcon.classList = "icon";
+  imgIcon.id = "icon";
+  imgIcon.src = "img/me-gusta.png";
+  imgIcon.style.width = "25px";
+  imgIcon.onmouseenter = () => changeColorIcon(imgIcon, true);
+  imgIcon.onmouseleave = () => changeColorIcon(imgIcon, false);
+  
+
+  let pLikes = document.createElement("p");
+  pLikes.classList = "card-text";
+  pLikes.style.flex = "auto";
+  pLikes.innerText = photo.upvotes;
+
 
   divColumn.appendChild(divCard);
   divCard.appendChild(imgPhoto);
@@ -57,6 +94,11 @@ const createCard = (divColumn, photo) => {
   divBodyCard.appendChild(pCard);
   divBodyCard.appendChild(dateCard);
   dateCard.appendChild(smallDate);
+  divBodyCard.appendChild(divContainer);
+  divContainer.appendChild(aLike);
+  divContainer.appendChild(pLikes);
+  aLike.appendChild(imgIcon);
+
 }
 
 
@@ -77,6 +119,7 @@ const createColumn = (divRow) => {
 const orderPhotos = (photos) => {
   let divRow;
   let divColumn;
+  photos.sort(((a, b) => b.upvotes - a.upvotes));
   photos.forEach(photo => {
     if (photos.indexOf(photo)%numColumnPhotos === 0) {
       divRow = createRow();
