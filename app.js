@@ -11,7 +11,7 @@ const noResults = (element) => {
   let divNoResults = document.createElement("div");
   divNoResults.id = "alertSearch";
   divNoResults.classList = "alert alert-danger";
-  divNoResults.innerText = `No results with ${element}!`;
+  divNoResults.innerText = `No results with "${element}"!`;
   divNoResults.style.marginTop = '2rem';
   app.appendChild(divNoResults);
 }
@@ -65,7 +65,6 @@ const createRow = () => {
   divRow.classList = "row";
   app.appendChild(divRow);
   return divRow;
-  
 }
 
 const createColumn = (divRow) => {
@@ -74,7 +73,6 @@ const createColumn = (divRow) => {
   divRow.appendChild(divColumn);
   return divColumn;
 }
-
 
 const orderPhotos = (photos) => {
   let divRow;
@@ -88,7 +86,7 @@ const orderPhotos = (photos) => {
       divColumn = createColumn(divRow);
       createCard(divColumn, photo);
     }
-  })
+  });
 }
 
 const removeDivPhotos = () => {
@@ -103,7 +101,7 @@ const findPhoto = (photos, element) => {
   let arrPhotos = [];
   removeDivPhotos();
   photos.map(photo => {
-    if (photo.title.toLowerCase() === element || photo.title.toLowerCase().includes(element))  arrPhotos.push(photo);
+    if (photo.title.toLowerCase().includes(element.toLowerCase()))  arrPhotos.push(photo);
   });
   arrPhotos.length > 0 ? orderPhotos(arrPhotos) : noResults(element);
 }
@@ -120,10 +118,7 @@ const onErrorResponse = error => console.error(`Aqui esta el error ${error}`);
 
 getPhotos(URL);
 
-search.addEventListener("change", (_event)=>{
-  findPhoto(allPhotos, search.value);
-})
-
+const onInputFunction = () => findPhoto(allPhotos, search.value);
 
 
 
